@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Bootstrap</title>
+</head>
+<body  >
+<div class="container">
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Home</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+      <a class="nav-link" href="/inspiration">Inspiration<span class="sr-only">(current)</span></a>
+      </li>
+     
+    </ul>
+  </div>
+</nav>
+ <h3> lorem ipsum </h3>
+<style>
+
+path {
+  pointer-events: all;
+  fill: none;
+  stroke: #666;
+  stroke-opacity: 0.2;
+}
+
+.active circle {
+  stroke: #000;
+  stroke-width: 2px;
+}
+
+</style>
+<!-- create an SVG to hold our dynamic data -->
+<svg style="width:100%;height:100%;">
+</svg>
+
+<script src="//d3js.org/d3.v4.min.js"></script>
+<script>
+// define an empty variable to hold our retreived data 
+var newdata = ""
+//AJAX get request to retreive all of our country data to populate or svg with circles
+$.get("/countries/", function(data)
+        {
+	 newdata = JSON.parse(data)	
+	 console.log(newdata)
+        
+var g = d3.select("svg").selectAll("g").data(newdata)
+
+// Define postion of cirlces
+var enter = g.enter().append("g")
+  .attr("transform",function(d){ 
+    return "translate("+ (Math.random() * 1500) + 500 + "," + (Math.random() * 1000) + 40 +")" 
+  });
+// Define colour of circles
+var circle = enter.append("circle")
+  .attr("r",function(d){ return Math.random() * 20 })
+  .attr("fill",function(d,i){ return i % 2 == 0 ? "red" : "blue" });
+
+enter.append("text").text(function(d){ return d.name });
+}).fail(function(){
+res.send("There was an error processing your request, please try again")
+})
+</script>
+</body>
+</html>
